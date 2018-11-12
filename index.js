@@ -18,7 +18,8 @@ BoxServer.prototype.app = function(conn) {
 	});
 	conn.on('data', function(data) {
     log.info('GOT DATA from client', { data: data });
-    conn.write(data);
+    let a = DataCenter.decodeBuffer(data);
+    conn.write(a);
 	});
   conn.on('error', log.error);
 };
