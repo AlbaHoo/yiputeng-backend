@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon ./index.js"
+  },
   "dependencies": {
     "lodash": "^4.17.11",
     "util": "^0.11.1",
     "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
   }
 }

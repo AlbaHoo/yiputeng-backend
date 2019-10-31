@@ -1,7 +1,7 @@
-var winston = require('winston');
+const winston = require('winston');
 
 // single logger instance internally
-var logger = winston.createLogger();
+const logger = winston.createLogger();
 
 logger.add(new winston.transports.Console({
   format: winston.format.simple()
