@@ -1,13 +1,15 @@
 var net = require('net');
-const Logger = require('./logger.js');
+const Logger = require('./lib//logger.js');
+const { Frame } = require('../lib/frame');
+const FrameManager = require('./lib/data-center');
+
 const log = new Logger('index');
-const DataCenter = require('./lib/data-center');
 
 function BoxServer(port) {
   this.port = port;
   this.server = net.createServer(this.app);
   log.info('start tcp server', { port });
-  this.server.listen(this.port, '127.0.0.1');
+  this.server.listen(this.port, '0.0.0.0');
 }
 
 BoxServer.prototype.app = function(socket) {
@@ -24,7 +26,8 @@ BoxServer.prototype.app = function(socket) {
     const messages = data.toString().split(/\r\n/).filter(el => el);
     // forEach is not promise aware
     for (let i = 0; i < messages.length; i++) {
-      const response = await DataCenter.handleRequest(Buffer.from(messages[i] + '\r\n'));
+      let frame = new Frame(Buffer.from(messages[i] + '\r\n'));
+      let response = await FrameManager.handleRequest(frame);
       socket.write(Buffer.from(response));
     }
   });
