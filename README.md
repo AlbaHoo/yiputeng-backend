@@ -14,3 +14,6 @@ read data from a file and send to localhost:1234
 ## Test with random message
 
 `head -c 30 /dev/urandom | netcat localhost 1234` send randon 30 byte to server
+
+Buffer.from('ff01', 'hex');
+Buffer.from([255, 1]).toString('hex');

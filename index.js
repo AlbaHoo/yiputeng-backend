@@ -1,8 +1,7 @@
-var net = require('net');
-const Logger = require('./lib//logger.js');
-const { Frame } = require('../lib/frame');
+const net = require('net');
+const Logger = require('./lib/logger.js');
+const { Frame } = require('./lib/frame');
 const FrameManager = require('./lib/data-center');
-
 const log = new Logger('index');
 
 function BoxServer(port) {
@@ -14,10 +13,11 @@ function BoxServer(port) {
 
 BoxServer.prototype.app = function(socket) {
   const remoteAddress = socket.remoteAddress + ':' + socket.remotePort;
-  log.info('New client connected:', remoteAddress);
+  log.info('New client connected', remoteAddress);
 
   socket.on('data', async data => {
-    log.info('Received data meta:', { remoteAddress, length: data.length });
+    log.info('Received data meta', { remoteAddress, length: data.length });
+    log.info('Received data', data.toString('hex'));
     if (!(data instanceof Buffer)) {
       log.error('Invalid data', { data });
       return;
