@@ -40,7 +40,7 @@ BoxServer.prototype.socketResponder = function(socket) {
     socket.write(Buffer.from(response));
   };
 
-  socket.on('data', processDataTest);
+  socket.on('data', processData);
 
 	socket.on('end', function() {
     log.info('end');
