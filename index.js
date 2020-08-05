@@ -7,14 +7,17 @@ const log = new Logger('index');
 const fakeData = '0170006038363936323730333930383733303941444838313156332e302e303400000a010101010101010101010a0a0a0a0a0a0a0a0a0a0001000100010001000100010001000100010001000000000100000c01040000000000000018390d0a';
 function BoxServer(port) {
   this.port = port;
-  this.server = net.createServer(this.socketResponder);
+  this.server = net.createServer(this.socketResponder.bind(this));
   log.info('start tcp server', { port });
   this.server.listen(this.port, '0.0.0.0');
+  this.clients = {}
 }
 
 BoxServer.prototype.socketResponder = function(socket) {
   const remoteAddress = socket.remoteAddress + ':' + socket.remotePort;
   log.info('New client connected', remoteAddress);
+  console.log(this.clients);
+  this.clients[socket.id] = socket;
 
   const processData = async (data) => {
     log.info('Received data meta', { remoteAddress, length: data.length });
@@ -30,17 +33,19 @@ BoxServer.prototype.socketResponder = function(socket) {
     for (let i = 0; i < messages.length; i++) {
       let frame = new Frame(Buffer.from(messages[i] + '\r\n'));
       let response = await FrameManager.handleRequest(frame);
-      socket.write(Buffer.from(response));
+      socket.write(response);
+      setInterval(() => {
+        console.log(frame.test());
+        socket.write(frame.test());
+      }, 5000);
     }
   };
 
-  const processDataTest = async (data) => {
+  const processDataTest = async (data, clients) => {
     let frame = new Frame(Buffer.from(fakeData, 'hex'));
-    let response = await FrameManager.handleRequest(frame);
-    socket.write(Buffer.from(response));
   };
 
-  socket.on('data', processData);
+  socket.on('data', process.env.NODE_ENV !== 'production' ? processDataTest : processData);
 
 	socket.on('end', function() {
     log.info('end');
