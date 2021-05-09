@@ -7,7 +7,7 @@
     "start": "nodemon ./index.js"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "util": "^0.11.1",
     "winston": "^3.1.0"
   },
